@@ -1,0 +1,2 @@
+
+NVL(supplier_city, 'n/a')

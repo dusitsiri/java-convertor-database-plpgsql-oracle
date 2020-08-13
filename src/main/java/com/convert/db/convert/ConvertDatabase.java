@@ -1,7 +1,13 @@
 package com.convert.db.convert;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,42 +32,34 @@ public class ConvertDatabase {
 				// read text file
 				inputStream = new FileInputStream(pathFile.toString());
 				scanner = new Scanner(inputStream, "UTF-8");
-
-				boolean convertDB = false;
-//				String regex = "\\([^0][0-9]* rows affected\\)";
 				
+				//list oracle syntax
 				List<String> listOracleSyntax = new ArrayList<String>();
 				listOracleSyntax.add("nvl");
 				listOracleSyntax.add("decode");
 				final CharSequence[] charSeqOracleItems = listOracleSyntax.toArray(new CharSequence[listOracleSyntax.size()]);
 				
-				StringBuffer afterConvertString = new StringBuffer();
+				String afterConvertString = "";
 				
+				//converting oracle to postgresql
 				while (scanner.hasNextLine()) {
 					String line = scanner.nextLine();
 					if (StringUtils.isNotEmpty(line)) {
 						for (CharSequence charseq : charSeqOracleItems) {
 							if (line.toLowerCase().contains(charseq)) {
-//								convertDB = true;
 								line = convert(line, charseq);
-								afterConvertString.append(line);
-								afterConvertString.append("\n");
 							}
+							afterConvertString = afterConvertString + line + "\n";
+							break;
 						}
 					} else {
-						afterConvertString.append(line);
-						afterConvertString.append("\n");
+						afterConvertString+=" \n";
 					}
-//					System.out.println(line);
 				}
-//				System.out.println(afterConvertString.toString());
 				
-				FileWriter newFile = new FileWriter("O:\\Workspaces\\convert-db\\convert\\newPlainText.txt");
-				newFile.write(afterConvertString.toString());
-//				System.out.println(newFile.toString());
+				//write file after converting
+				writeFile(afterConvertString);
 			}
-			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -83,5 +81,17 @@ public class ConvertDatabase {
 		}
 		
 		return stringConverted;
+	}
+	
+	public static void writeFile(String text) throws IOException {
+		
+		try {
+			
+			FileOutputStream out = new FileOutputStream("O:/Workspaces/convert-db/convert/newPlainText.txt");
+			out.write(text.getBytes());
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

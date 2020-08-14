@@ -1,13 +1,8 @@
 package com.convert.db.convert;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
-import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,7 +20,8 @@ public class ConvertDatabase {
 
 		try {
 //			Path pathFile = Paths.get(args[0]);
-			Path pathFile = Paths.get("O:\\Workspaces\\convert-db\\convert\\plaintext.txt");
+//			Path pathFile = Paths.get("O:\\Workspaces\\convert-db\\convert\\plaintext.txt");
+			Path pathFile = Paths.get("D:/Coding/java-convertor-database-plpgsql-oracle/plaintext.txt");
 //			Path pathFile = Paths.get("O:\\PL\\decode.txt");
 
 			if (Files.exists(pathFile)) {
@@ -49,9 +45,8 @@ public class ConvertDatabase {
 							if (line.toLowerCase().contains(charseq)) {
 								line = convert(line, charseq);
 							}
-							afterConvertString = afterConvertString + line + "\n";
-							break;
 						}
+						afterConvertString = afterConvertString + line + "\n";
 					} else {
 						afterConvertString+=" \n";
 					}
@@ -77,7 +72,8 @@ public class ConvertDatabase {
 		if (StringUtils.equals(remainStr, "nvl")) {
 			stringConverted = line.replace(remainStr, "coalesce");
 		} else if (StringUtils.equals(remainStr, "decode")) {
-			
+			//1.normal case 2.more one line 
+			stringConverted = line.replace(remainStr, "case");
 		}
 		
 		return stringConverted;
@@ -87,7 +83,8 @@ public class ConvertDatabase {
 		
 		try {
 			
-			FileOutputStream out = new FileOutputStream("O:/Workspaces/convert-db/convert/newPlainText.txt");
+//			FileOutputStream out = new FileOutputStream("O:/Workspaces/convert-db/convert/newPlainText.txt");
+			FileOutputStream out = new FileOutputStream("D:/Coding/java-convertor-database-plpgsql-oracle/newPlainText.txt");
 			out.write(text.getBytes());
 			
 		} catch (IOException e) {

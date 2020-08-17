@@ -5,8 +5,8 @@ coalesce(superman_gog, 123456)
 CREATE OR REPLACE PROCEDURE AAM."UPDATE_WBS_PO" IS
 BEGIN
           FOR  rec in ( select distinct   b.wbs,
-
-
+                                    case (a.tf_status ,'ntf','nt','tf','tr','tr'  ) tf_status ,
+                                    case (upper(a.service_group),'telecom','01', 'facility','02','it','03',
                                     'DATA NETWORK','05','SPART PART','06','STATIONARY','07',a.service_group )service_group
                                     from temp_wbs_po_dtl  a , eas_po_dtl  b
                                     where b.wbs  = substr(a.wbs, 5 ) )
